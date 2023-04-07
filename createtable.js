@@ -1,58 +1,41 @@
-const mysql = require('mysql');
-const fs = require('fs');
+const express = require("express");
+const app = express();
+const mysql = require("mysql");
 
-var config =
-{
-    host: 'prbase.mysql.database.azure.com',
-    user: 'prbase',
-    password: '2Axijoll@',
-    database: 'prbase',
-    port: 3306,
-    ssl: {ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem")}
+const cors = require("cors");
+
+app.use(cors());
+app.use(express.json())
+
+const fs = require("fs");
+var config = {
+  host: "prbase.mysql.database.azure.com",
+  user: "prbase",
+  password: "2Axijoll@",
+  database: "prbase",
+  port: 3306,
+  ssl: { ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem") },
 };
 
-const conn = new mysql.createConnection(config);
+const db = new mysql.createConnection(config);
 
-conn.connect(
-    function (err) { 
-    if (err) { 
-        console.log("!!! Cannot connect !!! Error:");
-        throw err;
+app.post("/create", (req, res) => {
+  const username = req.body.username;
+  const email = req.body.email;
+  const project = req.body.project;
+  const thickness = req.body.thickness;
+  const pixel = req.body.pixel;
+  const sample = req.body.sample;
+  const rawImages = req.body.rawImages;
+
+  db.query(
+    "INSERT INTO upload_info (username, email, project, thickness, pixel, sample, rawImages) VALUES (?, ?, ?, ?, ?, ?, ?);",
+    [username, email, project, thickness, pixel, sample, rawImages],
+    (err, results, fields) => {
+      if (err) throw err;
+      else console.log("Inserted " + results.affectedRows + " row(s).");
     }
-    else
-    {
-       console.log("Connection established.");
-           queryDatabase();
-    }
+  );
 });
 
-function queryDatabase(){
-    conn.query('DROP TABLE IF EXISTS inventory;', function (err, results, fields) { 
-        if (err) throw err; 
-        console.log('Dropped inventory table if existed.');
-    })
-        conn.query('CREATE TABLE inventory (id serial PRIMARY KEY, name VARCHAR(50), quantity INTEGER);', 
-            function (err, results, fields) {
-                if (err) throw err;
-        console.log('Created inventory table.');
-    })
-    conn.query('INSERT INTO inventory (name, quantity) VALUES (?, ?);', ['banana', 150], 
-            function (err, results, fields) {
-                if (err) throw err;
-        else console.log('Inserted ' + results.affectedRows + ' row(s).');
-        })
-    conn.query('INSERT INTO inventory (name, quantity) VALUES (?, ?);', ['orange', 154], 
-            function (err, results, fields) {
-                if (err) throw err;
-        console.log('Inserted ' + results.affectedRows + ' row(s).');
-        })
-    conn.query('INSERT INTO inventory (name, quantity) VALUES (?, ?);', ['apple', 100], 
-    function (err, results, fields) {
-                if (err) throw err;
-        console.log('Inserted ' + results.affectedRows + ' row(s).');
-        })
-    conn.end(function (err) { 
-    if (err) throw err;
-    else  console.log('Done.') 
-    });
-};
+app.listen(3001, () => {console.log('run api')});
