@@ -66,7 +66,7 @@ async function sendToAdmin(username, id) {
   
       const mailOptions = {
         from: 'PathoRadi <janice.hc.shih@gmail.com>',
-        to: 'shih.janice00@gmail.com;hsiuchuan.shih@howard.edu,',
+        to: 'chaohsiung.hsu@howard.edu;tsangwei.tu@howard.edu;hsiuchuan.shih@howard.edu',
         subject: `New Upload Info from ${username}`,
         text: `New Upload Info from ${username}, download here: ${pathoradiURL}/${id}`,
         html: `<div>New Upload Info from ${username}.</div><div> Download here: <a href='${pathoradiURL}/${id}'>${pathoradiURL}/${id}</a></div>`,
