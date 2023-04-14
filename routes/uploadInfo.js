@@ -35,7 +35,7 @@ async function sendMail(email, username, id) {
       to: email,
       subject: 'Email from PathoRadi Team',
       text: `Hello ${username} Your proccess id is pathoradi_${id}.`,
-      html: `<div>>Hello ${username}</div><div> Your proccess id is pathoradi_${id}.</div>`,
+      html: `<div>Hello ${username}</div><div> Your proccess id is pathoradi_${id}.</div>`,
     };
 
     const result = await transport.sendMail(mailOptions);
@@ -66,7 +66,7 @@ async function sendToAdmin(username, id) {
   
       const mailOptions = {
         from: 'PathoRadi <janice.hc.shih@gmail.com>',
-        to: 'shih.janice00@gmail.com',
+        to: 'shih.janice00@gmail.com;hsiuchuan.shih@howard.edu,',
         subject: `New Upload Info from ${username}`,
         text: `New Upload Info from ${username}, download here: ${pathoradiURL}/${id}`,
         html: `<div>New Upload Info from ${username}.</div><div> Download here: <a href='${pathoradiURL}/${id}'>${pathoradiURL}/${id}</a></div>`,
